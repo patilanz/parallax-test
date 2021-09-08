@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+	  content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="HandheldFriendly" content="true">
+<title>Document</title>
+<script src="https://cdn.jsdelivr.net/npm/lax.js" ></script>
+
+<script>
+window.onload = function () {
+  lax.init()
+
+  // Add a driver that we use to control our animations
+  lax.addDriver('scrollY', function () {
+	return window.scrollY
+  })
+
+  // Add animation bindings to elements
+  lax.addElements('.parallax', {
+	scrollY: {
+      translateY: [
+        ["elInY", "elCenterY+200", "elOutY"],
+        [0,200,-300],
+        {
+          easing: 'easeInOutQuart',
+        }
+      ],
+	}
+  });
+
+  lax.addElements('.parallax2', {
+    scrollY: {
+      translateY: [
+        ["elInY", "elCenterY", "elOutY"],
+        [-200, -800, ],
+        {
+          easing: 'easeInOutQuart',
+        }
+      ],
+    }
+  });
+
+
+  lax.addElements('.parallax3', {
+    scrollY: {
+      translateY: [
+        [0, 400, 800],
+        [0, -200, -500],
+        {
+          easing: 'easeInOutQuart',
+        }
+      ],
+    }
+  })
+
+}
+</script>
+<style>
+body{
+	padding: 0;
+	margin: 0;
+	overflow-x: hidden;
+}
+.container{
+    width: 100vw;
+    overflow-x: hidden;
+	margin-top: 100px;
+}
+.p{
+	width: 800px;
+	height: 800px;
+    position: relative;
+	background-size: cover;
+	margin: auto;
+}
+.parallax2{
+}
+</style>
+
+</head>
+<body>
+<div class="container">
+
+  <div class="p parallax" style="background-image: url('img/parallax/1_2.png')"></div>
+  <div class="p parallax2" style="z-index:2;background-image: url('img/parallax/1.png')"></div>
+  <div class="p parallax2" style="z-index:1;top: -400px;background-image: url('img/parallax/1_3.png')"></div>
+
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+		content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="HandheldFriendly" content="true">
+  <title>Document</title>
+
+  <script>
+    window.onload = function () {
+
+      let els = [
+        {
+          $: '#p1', props: {
+            top: [
+              [[20, 400], [0, -800]],
+              /*		[[500, 700], [-800, -400]]*/
+            ]
+          }
+        }
+      ];
+
+      let followMouseEl = [
+        {
+          $: '#p1', restriction: 5
+		},{$: '#p5', restriction: 1, reverse: true}
+
+	  ];
+
+
+      window.onscroll = e => {
+        let v = document.scrollingElement.scrollTop;
+
+        els.forEach(({$, props, t_unity = 'px'}) => {
+          let el = document.querySelector($);
+
+          for (let key in props) {
+            let positions = props[key];
+            positions.forEach(pos => {
+              let scrollPos = pos[0];
+              let values = pos[1];
+              if (scrollPos[0] <= v && scrollPos[1] >= v) {
+                let scrollDif = scrollPos[1] - scrollPos[0];
+                let diff = values[1] - values[0];
+                let one_part = Math.abs(diff) / Math.abs(scrollDif);
+                let dir = diff < 0 ? -1 : 1;
+                let result = (v - scrollPos[0]) * one_part;
+
+                el.style[key] = `${(values[0] + result) * dir}${t_unity}`;
+              }
+            });
+          }
+        })
+      }
+
+      window.onmousemove = e => {
+        const {clientX: x, clientY: y} = e;
+		followMouseEl.forEach(({$, restriction = 2, reverse = false}) => {
+		  let el = document.querySelector($);
+          let midpoints = {x: parseInt(getSize(el).width)/2, y: parseInt(getSize(el).height)/2};
+          let pos = {x: x - midpoints.x, y: y - midpoints.y};
+          let values = {x: (pos.x / midpoints.x) * restriction, y: (pos.y / midpoints.y) * restriction};
+
+          let r = {x: values.x * (reverse ? -1 : 1) , y: values.y * (reverse ? -1 : 1)};
+
+          el.style.transform = `perspective(600px) rotateY(${r.x}deg) rotateX(${r.y}deg)`;
+
+		});
+
+	  }
+
+
+    const getSize = el => {
+        let p = el.getBoundingClientRect();
+        return {width: p.width, height: p.height};
+	}
+
+
+    }
+  </script>
+  <style>
+      html {
+          scroll-behavior: smooth;
+      }
+
+      body {
+          padding: 0;
+          margin: 0;
+          overflow-x: hidden;
+      }
+
+      .container {
+          width: 100vw;
+          overflow-x: hidden;
+          margin-top: 300px;
+      }
+
+      .p {
+          width: 800px;
+          height: 800px;
+          position: relative;
+          background-size: cover;
+          margin: auto;
+		  transition: top 1s;
+      }
+
+      .parallax2 {
+      }
+	  #p1{
+		  left: 10px;
+	  }
+  </style>
+
+</head>
+<body>
+<div class="container">
+
+  <div class="p parallax" id="p5" style="background-image: url('img/parallax/1_2.png')"></div>
+  <div class="p parallax2" id="p1" style="z-index:2;background-image: url('img/parallax/1.png')"></div>
+  <div class="p parallax2" id="p2" style="z-index:1;top: -400px;background-image: url('img/parallax/1_3.png')"></div>
+
+</div>
+
+
+</body>
+</html>
